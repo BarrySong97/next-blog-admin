@@ -1,0 +1,10 @@
+{
+  "home": {
+    "title": "Home",
+    "hero": "Hello Home"
+  },
+  "about": {
+    "title": "About",
+    "hero": "Hello About"
+  }
+}

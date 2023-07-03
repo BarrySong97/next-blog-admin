@@ -1,0 +1,10 @@
+{
+  "home": {
+    "title": "首页",
+    "hero": "你好 Home"
+  },
+  "about": {
+    "title": "关于",
+    "hero": "你好 About"
+  }
+}
