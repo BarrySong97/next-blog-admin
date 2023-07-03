@@ -1,80 +1,99 @@
-import { Button, Layout, LocaleProvider, Nav, Select } from "@douyinfe/semi-ui";
+import { Button, Layout, LocaleProvider, Nav } from "@douyinfe/semi-ui";
 import "./App.css";
-import { Link, Outlet } from "react-router-dom";
-import { IconGithubLogo, IconLanguage } from "@douyinfe/semi-icons";
+import { Outlet, useLocation } from "react-router-dom";
+import { IconGithubLogo } from "@douyinfe/semi-icons";
 import { QueryClient, QueryClientProvider } from "react-query";
-import zh_CN from "@douyinfe/semi-ui/lib/es/locale/source/zh_CN";
-import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 import "./i18n/config";
-import { useLocalStorageState } from "ahooks";
-import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
-const { Header, Content } = Layout;
+import { ChakraProvider } from "@chakra-ui/react";
+import Sider from "@douyinfe/semi-ui/lib/es/layout/Sider";
+import { Heading } from "@chakra-ui/react";
+const { Content } = Layout;
 const queryClient = new QueryClient();
-const semiLocale = {
-  zh: zh_CN,
-  en: en_US,
-} as const;
 function App() {
-  const [localeStorage, setLoaleStorage] = useLocalStorageState("locale", {
-    defaultValue: "en",
-  });
-  const { t, i18n } = useTranslation();
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    setLoaleStorage(lng);
-  };
-  useEffect(() => {
-    i18n.changeLanguage(localeStorage);
-  }, []);
+  const menuItems = [
+    {
+      key: "dashboard",
+      text: "首页",
+      path: "/",
+    },
+    {
+      key: "posts",
+      text: "文章",
+      path: "/posts",
+    },
+    {
+      key: "categories",
+      text: "分类",
+      path: "/categories",
+    },
+    {
+      key: "photos",
+      text: "照片",
+      path: "/photos",
+    },
+    {
+      key: "comments",
+      text: "评论",
+      path: "/comments",
+    },
+    {
+      key: "settings",
+      text: "设置",
+      path: "/settings",
+    },
+  ];
+  // const pathnames = match.url.split("/").filter(Boolean);
+  const { pathname } = useLocation();
+  const pathTtitle = menuItems.find((item) => item.path === pathname)?.text;
   return (
     <QueryClientProvider client={queryClient}>
       <LocaleProvider
-        locale={semiLocale[localeStorage as keyof typeof semiLocale]}
+      // locale={semiLocale[localeStorage as keyof typeof semiLocale]}
       >
-        <Layout className="components-layout-demo">
-          <Header className="fixed top-0 w-full">
-            <Nav mode="horizontal" defaultSelectedKeys={["Home"]}>
-              <Nav.Item
-                itemKey="Home"
-                text={<Link to="/">{t("home.title")}</Link>}
-                // icon={<IconHome size="large" />}
-              />
-              <Nav.Item
-                itemKey="Setting"
-                text={<Link to="/about">{t("about.title")}</Link>}
-                // icon={<IconSetting size="large" />}
-              />
-              <Nav.Footer>
-                <Button
-                  theme="borderless"
-                  type="tertiary"
-                  onClick={() => {
-                    window.open(
-                      "https://github.com/BarrySong97/vite-react-semi-starter",
-                      "_blank"
-                    );
-                  }}
-                  style={{ marginRight: 10, marginLeft: 10 }}
-                  icon={<IconGithubLogo size="large" />}
-                />
-                <Select
-                  defaultValue="en"
-                  onChange={(value) => changeLanguage(value as string)}
-                  value={localeStorage}
-                  style={{ width: 200, marginRight: 10 }}
-                  insetLabel={<IconLanguage />}
-                >
-                  <Select.Option value="zh">中文</Select.Option>
-                  <Select.Option value="en">English</Select.Option>
-                </Select>
-              </Nav.Footer>
-            </Nav>
-          </Header>
-          <Content>
-            <Outlet />
-          </Content>
-        </Layout>
+        <ChakraProvider>
+          <Layout className="components-layout-demo h-screen">
+            <Sider className="">
+              <Nav defaultSelectedKeys={["dashboard"]} className="h-full">
+                {menuItems.map((item) => {
+                  return (
+                    <Nav.Item
+                      key={item.key}
+                      itemKey={item.key}
+                      text={item.text}
+                      // icon={<IconHome size="large" />}
+                    />
+                  );
+                })}
+              </Nav>
+            </Sider>
+            <Content>
+              <Nav
+                mode="horizontal"
+                defaultSelectedKeys={["dashboard"]}
+                // className="fixed top-0"
+              >
+                <Heading as="h2" size="md">
+                  {pathTtitle}
+                </Heading>
+                <Nav.Footer>
+                  <Button
+                    theme="borderless"
+                    type="tertiary"
+                    onClick={() => {
+                      window.open(
+                        "https://github.com/BarrySong97/vite-react-semi-starter",
+                        "_blank"
+                      );
+                    }}
+                    style={{ marginRight: 10, marginLeft: 10 }}
+                    icon={<IconGithubLogo size="large" />}
+                  />
+                </Nav.Footer>
+              </Nav>
+              <Outlet />
+            </Content>
+          </Layout>
+        </ChakraProvider>
       </LocaleProvider>
     </QueryClientProvider>
   );

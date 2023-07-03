@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
-import Home from "./pages/Home/index.tsx";
-import About from "./pages/About/index.tsx";
+import Dashboard from "./pages/Dashboard/index.tsx";
+import About from "./pages/Categories/index.tsx";
 import "@douyinfe/semi-ui/dist/css/semi.min.css";
 
 const router = createBrowserRouter([
@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: <Dashboard />,
       },
       {
         path: "about",
