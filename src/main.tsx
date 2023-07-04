@@ -6,6 +6,7 @@ import "./index.css";
 import Dashboard from "./pages/Dashboard/index.tsx";
 import About from "./pages/Categories/index.tsx";
 import "@douyinfe/semi-ui/dist/css/semi.min.css";
+import Login from "./pages/Login/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
         element: <About />,
       },
     ],
+  },
+  {
+    path: "login",
+    element: <Login />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

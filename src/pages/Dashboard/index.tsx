@@ -10,8 +10,8 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { Table, Avatar } from "@douyinfe/semi-ui";
-import { Card, CardHeader, CardBody } from "@chakra-ui/react";
-import PostTable from "../../components";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import PostTable from "../../components/PostTable";
 export interface HomeProps {}
 const Dashboard: FC<HomeProps> = () => {
   const { t } = useTranslation();
@@ -123,14 +123,26 @@ const Dashboard: FC<HomeProps> = () => {
         {statusList.map((item) => {
           return (
             <Card key={item.key} className="flex-1">
-              <CardBody>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Total Revenue
+                </CardTitle>
+                {/* <DollarSign className="h-4 w-4 text-muted-foreground" /> */}
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">$45,231.89</div>
+                <p className="text-xs text-muted-foreground">
+                  +20.1% from last month
+                </p>
+              </CardContent>
+              {/* <CardContent>
                 <StatGroup>
                   <Stat>
                     <StatLabel>{item.title}</StatLabel>
                     <StatNumber>345,670</StatNumber>
                   </Stat>
                 </StatGroup>
-              </CardBody>
+              </CardContent> */}
             </Card>
           );
         })}
@@ -140,17 +152,17 @@ const Dashboard: FC<HomeProps> = () => {
           <CardHeader>
             <Heading size="md">最近文章</Heading>
           </CardHeader>
-          <CardBody>
+          <CardContent>
             <PostTable />
-          </CardBody>
+          </CardContent>
         </Card>
         <Card className="flex-1">
           <CardHeader>
             <Heading size="md">最近评论</Heading>
           </CardHeader>
-          <CardBody>
+          <CardContent>
             <Table columns={columns} dataSource={data} pagination={false} />
-          </CardBody>
+          </CardContent>
         </Card>
       </div>
       <div className="flex gap-4 mt-4">
@@ -158,9 +170,9 @@ const Dashboard: FC<HomeProps> = () => {
           <CardHeader>
             <Heading size="md">最近照片</Heading>
           </CardHeader>
-          <CardBody>
+          <CardContent>
             <Table columns={columns} dataSource={data} pagination={false} />
-          </CardBody>
+          </CardContent>
         </Card>
       </div>
     </div>
