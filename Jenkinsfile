@@ -7,14 +7,15 @@ pipeline {
             }
         }
 
-        stage('build and deploy') {
+        stage('build') {
             steps {
-                sh 'docker-compose up'
+                sh 'docker build -t next-blog-admin .'
             }
         }
-        stage('move dist to files') {
+        stage('deploy') {
             steps {
-                sh 'docker cp next-blog-admin:/app/dist /var/jenkins_home/site/next-blog-admin'
+                sh 'docker run --name next-blog-admin next-blog-admin'
+                sh 'docker cp next-blog-admin:/app/dist /var/jenkins_home/site/next-blog-admin-front'
                 sh 'docker rm -f next-blog-admin'
             }
         }
