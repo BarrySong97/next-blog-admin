@@ -110,10 +110,10 @@ const Categories: FC = () => {
       enableSorting: false,
       enableHiding: false,
     },
-    {
-      accessorKey: "id",
-      header: "id",
-    },
+    // {
+    //   accessorKey: "id",
+    //   header: "id",
+    // },
     {
       accessorKey: "name",
       header: "名称",

@@ -8,4 +8,5 @@ export type CreatePostDto = {
     content: string;
     authorId: string;
     categoryId: string;
+    cover?: string;
 };

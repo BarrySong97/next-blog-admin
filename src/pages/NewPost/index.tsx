@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "./markdownstyle.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +26,16 @@ import { PostsService } from "@/api";
 import { useAuth } from "@/auth";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 const formSchema = z.object({
   title: z.string().min(2).max(50),
   content: z.string(),
@@ -40,6 +50,7 @@ const NewPost: FC = () => {
     queryFn: CategoryService.categoryControllerFindAll,
   });
   const { id } = useParams();
+  const [cover, setCover] = useState<string>();
   const type = id ? "edit" : "create";
 
   const { data } = useQuery({
@@ -62,6 +73,9 @@ const NewPost: FC = () => {
       categoryId: data?.categoryId,
     },
   });
+  useEffect(() => {
+    setCover(data?.cover);
+  }, [data]);
   const { user } = useAuth();
   const navigate = useNavigate();
   const createPost = async () => {
@@ -73,6 +87,7 @@ const NewPost: FC = () => {
     const res = await PostsService.postControllerCreate({
       ...data,
       authorId: user?.id,
+      cover,
     });
     toast({
       title: "创建文章: " + res.title,
@@ -90,6 +105,7 @@ const NewPost: FC = () => {
     const res = await PostsService.postControllerUpdate(id!, {
       ...data,
       authorId: user?.id,
+      cover,
     });
     toast({
       title: "编辑文章: " + res.title,
@@ -145,19 +161,41 @@ const NewPost: FC = () => {
               </FormItem>
             )}
           />
-          <Button
-            onClick={() => {
-              if (type === "edit") {
-                editPost();
-              } else {
-                createPost();
-              }
-            }}
-            size={"sm"}
-            className="inline-block w-[56px]"
-          >
-            发布
-          </Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button size={"sm"} className="inline-block w-[56px]">
+                发布
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>添加封面</DialogTitle>
+                <DialogDescription>
+                  为你的文章添加封面（非必要）
+                </DialogDescription>
+                <Input
+                  value={cover}
+                  onChange={(e) => setCover(e.target.value)}
+                  placeholder="封面链接"
+                />
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    onClick={() => {
+                      if (type === "edit") {
+                        editPost();
+                      } else {
+                        createPost();
+                      }
+                    }}
+                  >
+                    发布
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
         <FormField
           control={form.control}

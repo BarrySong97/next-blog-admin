@@ -23,21 +23,31 @@ requestBody: CreatePostDto,
 ): CancelablePromise<PostDTO | any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/post',
+            url: '/posts',
             body: requestBody,
             mediaType: 'application/json',
         });
     }
 
     /**
-     * @returns any 
      * @returns PostDTO 
      * @throws ApiError
      */
-    public static postControllerFindAll(): CancelablePromise<Array<Record<string, any>> | Array<PostDTO>> {
+    public static postControllerFindAll(): CancelablePromise<Array<PostDTO>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/post',
+            url: '/posts',
+        });
+    }
+
+    /**
+     * @returns PostDTO 
+     * @throws ApiError
+     */
+    public static postControllerFindRecent(): CancelablePromise<Array<PostDTO>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/posts/recent',
         });
     }
 
@@ -52,7 +62,7 @@ id: string,
 ): CancelablePromise<any | PostDTO> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/post/{id}',
+            url: '/posts/{id}',
             path: {
                 'id': id,
             },
@@ -72,7 +82,7 @@ requestBody: UpdatePostDto,
 ): CancelablePromise<any | PostDTO> {
         return __request(OpenAPI, {
             method: 'PATCH',
-            url: '/post/{id}',
+            url: '/posts/{id}',
             path: {
                 'id': id,
             },
@@ -92,7 +102,7 @@ id: string,
 ): CancelablePromise<any | PostDTO> {
         return __request(OpenAPI, {
             method: 'DELETE',
-            url: '/post/{id}',
+            url: '/posts/{id}',
             path: {
                 'id': id,
             },

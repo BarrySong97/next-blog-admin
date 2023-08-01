@@ -14,4 +14,5 @@ export type PostDTO = {
     content: string;
     authorId: string;
     categoryId: string;
+    cover: string;
 };

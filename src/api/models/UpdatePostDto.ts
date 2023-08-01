@@ -8,4 +8,5 @@ export type UpdatePostDto = {
     content?: string;
     authorId?: string;
     categoryId?: string;
+    cover?: string;
 };

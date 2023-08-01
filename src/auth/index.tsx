@@ -55,6 +55,7 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
     { setTrue: setAuthLoadingTrue, setFalse: setAuthLoadingFalse },
   ] = useBoolean(true);
   const { user } = auth;
+  const ref = React.useRef(0);
   const getCurrentUser = async () => {
     try {
       if (!authLoading) {

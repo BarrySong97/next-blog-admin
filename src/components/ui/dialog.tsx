@@ -5,6 +5,7 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 
 const Dialog = DialogPrimitive.Root;
+const DialogClose = DialogPrimitive.Close;
 
 const DialogTrigger = DialogPrimitive.Trigger;
 
@@ -120,4 +121,5 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 };
