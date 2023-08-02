@@ -19,5 +19,7 @@ export function createGoogleLoginUrl() {
   url.searchParams.append("response_type", responseType);
 
   // return url.toString();
-  window.location.href = url.toString();
+  console.log(url.toString());
+  
+  // window.location.href = url.toString();
 }
