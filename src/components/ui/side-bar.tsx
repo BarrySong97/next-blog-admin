@@ -23,10 +23,6 @@ export const navList = [
     href: "/photos",
   },
   {
-    name: "评论",
-    href: "/comments",
-  },
-  {
     name: "项目",
     href: "/projects",
   },

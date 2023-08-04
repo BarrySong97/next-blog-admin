@@ -39,6 +39,7 @@ const formSchema = z.object({
   image: z.string(),
   url: z.string(),
   content: z.string(),
+  github: z.string().optional(),
   postId: z.string().optional(),
 });
 export interface EditDialogProps {
@@ -112,6 +113,7 @@ const EditDialog: FC<EditDialogProps> = ({
         image: clickItem.image,
         content: clickItem.content,
         url: clickItem.url,
+        github : clickItem.github,
         postId: clickItem.post?.id,
       });
     }
@@ -136,6 +138,19 @@ const EditDialog: FC<EditDialogProps> = ({
                 <FormLabel>项目名称</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="链接名称" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="github"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>github</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="github url" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

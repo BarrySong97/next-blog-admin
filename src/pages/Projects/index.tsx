@@ -125,6 +125,10 @@ export default function Projects() {
       header: "项目描述",
     },
     {
+      accessorKey: "github",
+      header: "github",
+    },
+    {
       accessorKey: "post",
       header: "关联文章",
       cell({ row }) {

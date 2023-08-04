@@ -10,6 +10,8 @@ import {
 } from "./icons";
 import { DataTable } from "@/components/ui/data-table";
 import PostTable from "../Posts/components/post-table";
+import { useRequest } from "ahooks";
+import { AppService } from "@/api";
 export interface HomeProps {}
 export type Payment = {
   id: string;
@@ -23,37 +25,33 @@ const Dashboard: FC<HomeProps> = () => {
   const statusList = [
     {
       title: "文章数",
-      key: "posts",
+      key: "post",
       icon: (
         <MaterialSymbolsArticle className="h-4 w-4 text-muted-foreground" />
       ),
     },
     {
-      title: "评论数",
-      key: "comments",
+      title: "项目数",
+      key: "project",
       icon: (
         <MaterialSymbolsCommentRounded className="h-4 w-4 text-muted-foreground" />
       ),
     },
     {
       title: "照片数",
-      key: "photos",
+      key: "photo",
       icon: (
         <MaterialSymbolsImagesmodeOutline className="h-4 w-4 text-muted-foreground" />
       ),
     },
-    {
-      title: "访问数",
-      key: "projects",
-      icon: (
-        <MaterialSymbolsAccountBox className="h-4 w-4 text-muted-foreground" />
-      ),
-    },
-  ];
+  ] as const;
+  type Keys = (typeof statusList)[number]["key"];
+  const { data } = useRequest(() => AppService.appControllerGetDashboardData());
   return (
     <div className="p-4 home ">
       <div className="flex gap-4">
         {statusList.map((item) => {
+          const nums = data?.[item.key as Keys] ?? 0;
           return (
             <Card key={item.key} className="flex-1">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -64,7 +62,7 @@ const Dashboard: FC<HomeProps> = () => {
                 {/* <DollarSign className="h-4 w-4 text-muted-foreground" /> */}
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$45,231.89</div>
+                <div className="text-2xl font-bold">{nums}</div>
               </CardContent>
             </Card>
           );

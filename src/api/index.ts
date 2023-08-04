@@ -11,6 +11,7 @@ export type { CreatePhotoDto } from './models/CreatePhotoDto';
 export type { CreatePostDto } from './models/CreatePostDto';
 export type { CreateProjectDto } from './models/CreateProjectDto';
 export type { CreateSettingDto } from './models/CreateSettingDto';
+export type { DashboardDataDTO } from './models/DashboardDataDTO';
 export type { PhotoDTO } from './models/PhotoDTO';
 export type { PostDTO } from './models/PostDTO';
 export type { ProjectDTO } from './models/ProjectDTO';
@@ -23,6 +24,7 @@ export type { UpdateProjectDto } from './models/UpdateProjectDto';
 export type { UpdateSettingDto } from './models/UpdateSettingDto';
 export { UserDTO } from './models/UserDTO';
 
+export { AppService } from './services/AppService';
 export { AuthService } from './services/AuthService';
 export { CategoryService } from './services/CategoryService';
 export { DefaultService } from './services/DefaultService';
