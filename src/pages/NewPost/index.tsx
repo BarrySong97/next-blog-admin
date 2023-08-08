@@ -26,6 +26,7 @@ import { PostsService } from "@/api";
 import { useAuth } from "@/auth";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import toc from "markdown-it-toc-and-anchor";
 import {
   Dialog,
   DialogClose,
@@ -36,11 +37,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import MarkdownIt from "markdown-it";
 const formSchema = z.object({
   title: z.string().min(2).max(50),
   content: z.string(),
   categoryId: z.string(),
+  html: z.string(),
 });
+const mdParser = new MarkdownIt();
+const mdToc = new MarkdownIt();
+mdParser.enable("html_inline");
 const NewPost: FC = () => {
   const { data: categoryData } = useQuery({
     queryKey: ["categories"],
@@ -78,22 +84,58 @@ const NewPost: FC = () => {
   }, [data]);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const parseMarkdown = (markdown?: string) => {
+    if (!markdown) {
+      return "";
+    }
+    mdToc.use(toc, {
+      anchorLinkSpace: false,
+      slugify: (s: string) => `${s.replace(/\*/g, " ")}`,
+    });
+    let tocTokens = "";
+    mdToc.render(markdown, {
+      tocCallback: function (tocMarkdown, tocArray, tocHtml) {
+        tocTokens = JSON.stringify(tocArray);
+      },
+    });
+    mdParser.renderer.rules.heading_open = function (tokens, idx) {
+      
+      const headingText = tokens[idx + 1].content;
+      
+      const id = headingText.toLowerCase().replace(/\*/g, "");
+      
+      return `<${tokens[idx].tag} id="${id}">`;
+    };
+    const html = mdParser.render(markdown);
+
+    return [html, tocTokens];
+  };
   const createPost = async () => {
     if (!user) {
       return;
     }
     const data = form.getValues();
+    const [html, toc] = parseMarkdown(data.content);
 
-    const res = await PostsService.postControllerCreate({
-      ...data,
-      authorId: user?.id,
-      cover,
-    });
-    toast({
-      title: "创建文章: " + res.title,
-      description: "创建成功",
-    });
-    navigate(`/posts`);
+    try {
+      const res = await PostsService.postControllerCreate({
+        ...data,
+        authorId: user?.id,
+        html,
+        toc,
+        cover,
+      });
+      toast({
+        title: "创建文章: " + res.title,
+        description: "创建成功",
+      });
+      navigate(`/posts`);
+    } catch (error) {
+      toast({
+        title: "创建文章:",
+        description: "创建失败",
+      });
+    }
   };
 
   const editPost = async () => {
@@ -101,19 +143,31 @@ const NewPost: FC = () => {
       return;
     }
     const data = form.getValues();
+    console.log(333333333);
 
-    const res = await PostsService.postControllerUpdate(id!, {
-      ...data,
-      authorId: user?.id,
-      cover,
-    });
-    toast({
-      title: "编辑文章: " + res.title,
-      description: "编辑成功",
-    });
-    navigate(`/posts`);
+    const [html, toc] = parseMarkdown(data.content);
+    try {
+      const postData = {
+        ...data,
+        authorId: user?.id,
+        html,
+        toc,
+        cover,
+      };
+      postData.category = undefined;
+      const res = await PostsService.postControllerUpdate(id!, postData);
+      toast({
+        title: "编辑文章: " + res.title,
+        description: "编辑成功",
+      });
+      navigate(`/posts`);
+    } catch (error) {
+      toast({
+        title: "创建文章:",
+        description: "创建失败",
+      });
+    }
   };
-
   return (
     <div
       className="p-4 "
@@ -129,10 +183,7 @@ const NewPost: FC = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="w-[180px]">
                       <SelectValue placeholder="分类" />
                     </SelectTrigger>
@@ -207,8 +258,9 @@ const NewPost: FC = () => {
                   value={field.value}
                   height={"calc(100vh - 148px)"}
                   className="w-full"
-                  // {...register("content")}
-                  onChange={(t) => field.onChange(t ?? "")}
+                  onChange={(t) => {
+                    field.onChange(t ?? "");
+                  }}
                 />
               </FormControl>
               <FormMessage />
