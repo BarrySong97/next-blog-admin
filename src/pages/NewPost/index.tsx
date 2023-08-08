@@ -90,7 +90,6 @@ const NewPost: FC = () => {
     }
     mdToc.use(toc, {
       anchorLinkSpace: false,
-      slugify: (s: string) => `${s.replace(/\*/g, " ")}`,
     });
     let tocTokens = "";
     mdToc.render(markdown, {
@@ -99,11 +98,10 @@ const NewPost: FC = () => {
       },
     });
     mdParser.renderer.rules.heading_open = function (tokens, idx) {
-      
       const headingText = tokens[idx + 1].content;
-      
+
       const id = headingText.toLowerCase().replace(/\*/g, "");
-      
+
       return `<${tokens[idx].tag} id="${id}">`;
     };
     const html = mdParser.render(markdown);
