@@ -12,6 +12,7 @@ import Categories from "./pages/Categories/index.tsx";
 import Photos from "./pages/Photos/index.tsx";
 import Projects from "./pages/Projects/index.tsx";
 import Setting from "./pages/Setting/index.tsx";
+import Test from "./pages/test/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
+      },
+      {
+        path: "test",
+        element: <Test />,
       },
       {
         path: "posts",

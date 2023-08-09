@@ -38,6 +38,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import MarkdownIt from "markdown-it";
+import { uploadImages } from "@/image";
 const formSchema = z.object({
   title: z.string().min(2).max(50),
   content: z.string(),
@@ -93,7 +94,7 @@ const NewPost: FC = () => {
     });
     let tocTokens = "";
     mdToc.render(markdown, {
-      tocCallback: function (tocMarkdown, tocArray, tocHtml) {
+      tocCallback: function (_, tocArray) {
         tocTokens = JSON.stringify(tocArray);
       },
     });
@@ -165,6 +166,52 @@ const NewPost: FC = () => {
         description: "创建失败",
       });
     }
+  };
+  const insertToTextArea = (intsertString: string) => {
+    const textarea = document.querySelector("textarea");
+    if (!textarea) {
+      return null;
+    }
+
+    let sentence = textarea.value;
+    const len = sentence.length;
+    const pos = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+
+    const front = sentence.slice(0, pos);
+    const back = sentence.slice(pos, len);
+
+    sentence = front + intsertString + back;
+
+    textarea.value = sentence;
+    textarea.selectionEnd = end + intsertString.length;
+
+    return sentence;
+  };
+
+  const onImagePasted = async (
+    dataTransfer: DataTransfer,
+    setMarkdown: (value: string) => void
+  ) => {
+    const files: File[] = [];
+    for (let index = 0; index < dataTransfer.items.length; index += 1) {
+      const file = dataTransfer.files.item(index);
+
+      if (file) {
+        files.push(file);
+      }
+    }
+
+    await Promise.all(
+      files.map(async (file) => {
+        const url = await uploadImages(file);
+        const insertedMarkdown = insertToTextArea(`![](${url})`);
+        if (!insertedMarkdown) {
+          return;
+        }
+        setMarkdown(insertedMarkdown);
+      })
+    );
   };
   return (
     <div
@@ -256,6 +303,23 @@ const NewPost: FC = () => {
                   value={field.value}
                   height={"calc(100vh - 148px)"}
                   className="w-full"
+                  onPaste={async (event) => {
+                    await onImagePasted(
+                      event.clipboardData,
+                      (content: string) => {
+                        form.setValue("content", content);
+                      }
+                    );
+                  }}
+                  onDrop={async (event) => {
+                    event.preventDefault();
+                    await onImagePasted(
+                      event.dataTransfer,
+                      (content: string) => {
+                        form.setValue("content", content);
+                      }
+                    );
+                  }}
                   onChange={(t) => {
                     field.onChange(t ?? "");
                   }}

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,13 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "react-query";
-import {
-  CategoryDTO,
-  CategoryService,
-  CreateCategoryDto,
-  PhotoDTO,
-  PhotosService,
-} from "@/api";
+import { CategoryDTO, CreateCategoryDto, PhotoDTO, PhotosService } from "@/api";
+import { Separator } from "@/components/ui/separator";
+import { uploadImages } from "@/image";
 export interface EditDialogProps {
   clickItem?: PhotoDTO;
   open: boolean;
@@ -30,6 +26,8 @@ const EditDialog: FC<EditDialogProps> = ({
 }) => {
   const [url, setUrl] = useState<string>();
   const queryClient = useQueryClient();
+  const [file, setFile] = useState<File>();
+  const inputRef = useRef<HTMLInputElement>(null);
   const addMutation = useMutation(PhotosService.photosControllerCreate, {
     onSuccess: (data) => {
       queryClient.setQueryData(["photos"], (oldData?: CreateCategoryDto[]) => {
@@ -38,13 +36,26 @@ const EditDialog: FC<EditDialogProps> = ({
     },
   });
   const handleCreate = async () => {
-    if (!url) {
+    if (!url && !inputRef.current) {
       return;
     }
-    await addMutation.mutateAsync({
-      url,
-    });
-    onoK();
+    if (!inputRef.current) {
+      return;
+    }
+
+    const file = inputRef.current.files?.[0];
+    console.log(file);
+
+    if (!file) {
+      return;
+    }
+    const imageUrl = await uploadImages(file);
+    if (imageUrl) {
+      await addMutation.mutateAsync({
+        url: imageUrl,
+      });
+      onoK();
+    }
   };
   const handleEdit = async () => {
     if (!url || !clickItem) {
@@ -81,7 +92,7 @@ const EditDialog: FC<EditDialogProps> = ({
           <DialogTitle>{!clickItem ? "新增" : "编辑"}</DialogTitle>
         </DialogHeader>
 
-        <div className="flex items-center">
+        <div className="flex flex-col items-center">
           <Input
             onChange={(e) => {
               setUrl(e.target.value);
@@ -90,6 +101,10 @@ const EditDialog: FC<EditDialogProps> = ({
             placeholder="照片链接"
             id="url"
           />
+          <Separator className="my-4" />
+          <div className="grid w-full  items-center gap-1.5">
+            <Input ref={inputRef} type="file" />
+          </div>
         </div>
         <DialogFooter>
           <Button
@@ -102,7 +117,6 @@ const EditDialog: FC<EditDialogProps> = ({
             取消
           </Button>
           <Button
-            disabled={!url}
             onClick={async () => {
               if (clickItem) {
                 await handleEdit();
@@ -110,6 +124,7 @@ const EditDialog: FC<EditDialogProps> = ({
                 await handleCreate();
               }
               setUrl("");
+              setFile(undefined);
             }}
           >
             确认
