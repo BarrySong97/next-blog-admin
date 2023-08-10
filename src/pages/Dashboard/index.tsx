@@ -12,6 +12,7 @@ import { DataTable } from "@/components/ui/data-table";
 import PostTable from "../Posts/components/post-table";
 import { useRequest } from "ahooks";
 import { AppService } from "@/api";
+import ImageLayout from "@/components/img-layout";
 export interface HomeProps {}
 export type Payment = {
   id: string;
@@ -48,7 +49,7 @@ const Dashboard: FC<HomeProps> = () => {
   type Keys = (typeof statusList)[number]["key"];
   const { data } = useRequest(() => AppService.appControllerGetDashboardData());
   return (
-    <div className="p-4 home ">
+    <div className="p-4 home flex flex-col">
       <div className="flex gap-4">
         {statusList.map((item) => {
           const nums = data?.[item.key as Keys] ?? 0;
@@ -68,7 +69,12 @@ const Dashboard: FC<HomeProps> = () => {
           );
         })}
       </div>
-      <div className="flex gap-4 mt-4">
+      <div
+        style={{
+          minHeight: "calc(100vh - 220px)",
+        }}
+        className="flex gap-4 mt-4 overflow-auto "
+      >
         <Card className="flex-1">
           <CardHeader>
             <CardTitle>最近文章</CardTitle>
@@ -78,8 +84,12 @@ const Dashboard: FC<HomeProps> = () => {
           </CardContent>
         </Card>
         <Card className="flex-1">
-          <CardHeader></CardHeader>
-          <CardContent></CardContent>
+          <CardHeader>
+            <CardTitle>首页照片</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ImageLayout />
+          </CardContent>
         </Card>
       </div>
     </div>

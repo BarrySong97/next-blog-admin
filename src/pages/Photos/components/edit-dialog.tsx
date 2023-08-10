@@ -31,7 +31,7 @@ const EditDialog: FC<EditDialogProps> = ({
   const addMutation = useMutation(PhotosService.photosControllerCreate, {
     onSuccess: (data) => {
       queryClient.setQueryData(["photos"], (oldData?: CreateCategoryDto[]) => {
-        return [...(oldData ?? []), data];
+        return [data, ...(oldData ?? [])];
       });
     },
   });

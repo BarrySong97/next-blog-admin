@@ -11,7 +11,6 @@ const ImageViewer: FC<ImageViewerProps> = ({
   src,
   className = "",
   style,
-  viewerHeight,
   viewerWidth = 720,
 }) => {
   return (
