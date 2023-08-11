@@ -15,12 +15,14 @@ import dayjs from "dayjs";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EditDialog from "./components/edit-dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import ImageViewer from "@/components/image-viewer";
 
 export default function Photos() {
   const queryClient = useQueryClient();
+  const [layout, setLayout] = useState<"grid" | "list">("grid");
   const [editModalVisible, { setTrue: setEditTrue, setFalse: setEditFalse }] =
     useBoolean(false);
   const [clickItem, setClickItem] = useState<PhotoDTO>();
@@ -177,46 +179,74 @@ export default function Photos() {
   ];
   return (
     <div className="p-4">
-      <DataTable
-        // search={false}
-        pagination={true}
-        visibleRows={true}
-        columns={columns}
-        toolActions={
-          <>
-            <Button
-              onClick={() => {
-                // setEditTrue();
-                showAlertModal({
-                  title: "批量删除照片",
-                  content: "确认要删除选中的照片吗？",
-                  onOk() {
-                    if (selectRows) {
-                      handleDeleteBatch(selectRows.map((item) => item.id));
-                    }
-                  },
-                });
-                // setClickItem(undefined);
-              }}
-              variant={"destructive"}
-              size={"sm"}
-            >
-              删除
-            </Button>
-            <Button
-              onClick={() => {
-                setEditTrue();
-                setClickItem(undefined);
-              }}
-              variant={"outline"}
-              size={"sm"}
-            >
-              新增
-            </Button>
-          </>
-        }
-        data={data ?? []}
-      />
+      <div className="flex justify-between items-center">
+        <div className="space-x-2">
+          <Button
+            onClick={() => {
+              // setEditTrue();
+              showAlertModal({
+                title: "批量删除照片",
+                content: "确认要删除选中的照片吗？",
+                onOk() {
+                  if (selectRows) {
+                    handleDeleteBatch(selectRows.map((item) => item.id));
+                  }
+                },
+              });
+              // setClickItem(undefined);
+            }}
+            variant={"destructive"}
+            size={"sm"}
+          >
+            删除
+          </Button>
+          <Button
+            onClick={() => {
+              setEditTrue();
+              setClickItem(undefined);
+            }}
+            variant={"outline"}
+            size={"sm"}
+          >
+            新增
+          </Button>
+        </div>
+        <Tabs
+          onValueChange={(e) => {
+            setLayout(e as "grid" | "list");
+          }}
+          defaultValue="grid"
+        >
+          <TabsList>
+            <TabsTrigger value="grid">Grid</TabsTrigger>
+            <TabsTrigger value="list">List</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+      {layout === "list" ? (
+        <DataTable
+          // search={false}
+          pagination={true}
+          visibleRows={true}
+          columns={columns}
+          toolActions={<></>}
+          data={data ?? []}
+        />
+      ) : (
+        <section className="flex flex-col md:grid md:grid-cols-4 gap-2 mt-4  ">
+          {data?.map((img) => {
+            return (
+              <div key={img.id} className="mb-3  h-[350px] ">
+                <ImageViewer
+                  key={img.id}
+                  src={img.url ?? ""}
+                  className={`object-cover rounded-md w-full h-full cursor-pointer  `}
+                />
+              </div>
+            );
+          })}
+        </section>
+      )}
       <EditDialog
         open={editModalVisible}
         onCanceled={() => setEditFalse()}

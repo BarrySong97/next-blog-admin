@@ -34,6 +34,7 @@ interface DataTableProps<TData, TValue> {
   visibleRows?: boolean;
   pagination?: boolean;
   search?: boolean;
+  extraActions?: React.ReactNode;
   toolActions?: React.ReactNode;
 }
 
@@ -41,6 +42,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   toolActions,
+  extraActions,
   search = false,
   pagination = false,
   visibleRows = false,
@@ -80,6 +82,7 @@ export function DataTable<TData, TValue>({
       <DataTableToolbar
         visibleRows={visibleRows}
         search={search}
+        extraActions={extraActions}
         toolActions={toolActions}
         table={table}
       />

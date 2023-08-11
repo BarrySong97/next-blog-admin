@@ -70,13 +70,42 @@ const PostTable: FC<PostTableProps> = ({
       enableSorting: false,
       enableHiding: false,
     },
-    // {
-    //   accessorKey: "id",
-    //   header: "id",
-    // },
+    {
+      id: "index",
+      header: "序号",
+      cell(props) {
+        return <span>{props.row.index + 1}</span>;
+      },
+    },
     {
       accessorKey: "title",
       header: "标题",
+      cell(props) {
+        const dev = process.env.NODE_ENV === "development";
+        const link = dev
+          ? `http://localhost:5173/posts/${props.row.original.id}?`
+          : `http://admin.barrysong4real.cc/${props.row.original.id}?`;
+        return (
+          <a className="font-medium  underline" target="_black" href={link}>
+            {props.row.original.title}
+          </a>
+        );
+      },
+    },
+    {
+      accessorKey: "title",
+      header: "博客链接",
+      cell(props) {
+        const dev = process.env.NODE_ENV === "development";
+        const link = dev
+          ? `http://localhost:3001/posts/${props.row.original.id}`
+          : `http://barrysong4real.cc/${props.row.original.id}`;
+        return (
+          <a className="font-medium  underline" target="_black" href={link}>
+            {link}
+          </a>
+        );
+      },
     },
     {
       accessorKey: "category",
@@ -114,12 +143,13 @@ const PostTable: FC<PostTableProps> = ({
         );
       },
     },
-    {
-      accessorKey: "commentCount",
-      header: "评论数",
-    },
+    // {
+    //   accessorKey: "commentCount",
+    //   header: "评论数",
+    // },
     {
       id: "actions",
+      header: "操作",
       cell: ({ row }) => {
         return (
           <DropdownMenu>

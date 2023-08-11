@@ -13,6 +13,7 @@ specifiers:
   '@radix-ui/react-select': ^1.2.2
   '@radix-ui/react-separator': ^1.0.3
   '@radix-ui/react-slot': ^1.0.2
+  '@radix-ui/react-tabs': ^1.0.4
   '@radix-ui/react-toast': ^1.1.4
   '@tanstack/react-table': ^8.9.3
   '@types/markdown-it': ^13.0.0
@@ -76,6 +77,7 @@ dependencies:
   '@radix-ui/react-select': 1.2.2_lhsvdmrfrkqkmxtqosqgyd3k4i
   '@radix-ui/react-separator': 1.0.3_lhsvdmrfrkqkmxtqosqgyd3k4i
   '@radix-ui/react-slot': 1.0.2_s3k22s5ab4eu26xuel7hiaraxy
+  '@radix-ui/react-tabs': 1.0.4_lhsvdmrfrkqkmxtqosqgyd3k4i
   '@radix-ui/react-toast': 1.1.4_lhsvdmrfrkqkmxtqosqgyd3k4i
   '@tanstack/react-table': 8.9.3_biqbaboplfbrettd7655fr4n2y
   '@uiw/react-md-editor': 3.23.3_tqcjxml4rosq5qpg5cznikfcd4
@@ -1259,6 +1261,34 @@ packages:
       '@radix-ui/react-compose-refs': 1.0.1_s3k22s5ab4eu26xuel7hiaraxy
       '@types/react': 18.2.6
       react: 18.2.0
+    dev: false
+
+  /@radix-ui/react-tabs/1.0.4_lhsvdmrfrkqkmxtqosqgyd3k4i:
+    resolution: {integrity: sha512-egZfYY/+wRNCflXNHx+dePvnz9FbmssDTJBtgRfDY7e8SE5oIo3Py2eCB1ckAbh1Q7cQ/6yJZThJ++sgbxibog==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.21.5
+      '@radix-ui/primitive': 1.0.1
+      '@radix-ui/react-context': 1.0.1_s3k22s5ab4eu26xuel7hiaraxy
+      '@radix-ui/react-direction': 1.0.1_s3k22s5ab4eu26xuel7hiaraxy
+      '@radix-ui/react-id': 1.0.1_s3k22s5ab4eu26xuel7hiaraxy
+      '@radix-ui/react-presence': 1.0.1_lhsvdmrfrkqkmxtqosqgyd3k4i
+      '@radix-ui/react-primitive': 1.0.3_lhsvdmrfrkqkmxtqosqgyd3k4i
+      '@radix-ui/react-roving-focus': 1.0.4_lhsvdmrfrkqkmxtqosqgyd3k4i
+      '@radix-ui/react-use-controllable-state': 1.0.1_s3k22s5ab4eu26xuel7hiaraxy
+      '@types/react': 18.2.6
+      '@types/react-dom': 18.2.4
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /@radix-ui/react-toast/1.1.4_lhsvdmrfrkqkmxtqosqgyd3k4i:

@@ -95,14 +95,23 @@ const NewPost: FC = () => {
     let tocTokens = "";
     mdToc.render(markdown, {
       tocCallback: function (_, tocArray) {
+        tocArray?.forEach((element) => {
+          element.anchor = element.content
+            .toLowerCase()
+            .replace(/\*/g, "")
+            .replace(/\s/g, "-");
+          element.content = element.content.replace(/\*/g, "");
+        });
         tocTokens = JSON.stringify(tocArray);
       },
     });
     mdParser.renderer.rules.heading_open = function (tokens, idx) {
       const headingText = tokens[idx + 1].content;
 
-      const id = headingText.toLowerCase().replace(/\*/g, "");
-
+      const id = headingText
+        .toLowerCase()
+        .replace(/\*/g, "")
+        .replace(/\s/g, "-");
       return `<${tokens[idx].tag} id="${id}">`;
     };
     const html = mdParser.render(markdown);
@@ -142,7 +151,6 @@ const NewPost: FC = () => {
       return;
     }
     const data = form.getValues();
-    console.log(333333333);
 
     const [html, toc] = parseMarkdown(data.content);
     try {
@@ -269,11 +277,81 @@ const NewPost: FC = () => {
                 <DialogDescription>
                   为你的文章添加封面（非必要）
                 </DialogDescription>
-                <Input
-                  value={cover}
-                  onChange={(e) => setCover(e.target.value)}
-                  placeholder="封面链接"
-                />
+                <div className="">
+                  <div className="flex items-center justify-center w-full mb-2">
+                    <label
+                      // for="dropzone-file"
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        const file = e.dataTransfer.files[0];
+                        uploadImages(file).then((url) => {
+                          setCover(url);
+                        });
+                      }}
+                      className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+                    >
+                      {cover ? (
+                        <img src={cover} className="w-full h-64 object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg
+                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                          >
+                            <path
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                            />
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-semibold">
+                              Click to upload
+                            </span>{" "}
+                            or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          </p>
+                        </div>
+                      )}
+                      <input
+                        id="dropzone-file"
+                        type="file"
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            const file = e.target.files[0];
+                            uploadImages(file).then((url) => {
+                              setCover(url);
+                            });
+                          }
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mb-2 text-center">或者</div>
+                  {/* <img
+                    src={cover}
+                    className="flex-1 h-[250px] object-cover mb-4"
+                  /> */}
+
+                  <Input
+                    className=""
+                    value={cover}
+                    onChange={(e) => setCover(e.target.value)}
+                    placeholder="封面链接"
+                  />
+                </div>
               </DialogHeader>
               <DialogFooter>
                 <DialogClose asChild>
