@@ -1,12 +1,12 @@
-import { cn } from "@/lib/utils";
 import { Command } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { Helmet } from "react-helmet";
 import { UserAuthForm } from "@/components/ui/user-auth-form";
-import { Card, CardContent } from "@/components/ui/card";
-
 export default function Login() {
   return (
     <div className="h-screen">
+      <Helmet>
+        <title>登录</title>
+      </Helmet>
       <div className="container relative hidden h-full flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
         <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-zinc-900" />

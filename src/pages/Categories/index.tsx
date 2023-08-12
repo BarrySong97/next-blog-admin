@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { Helmet } from "react-helmet";
 import { MoreHorizontal } from "lucide-react";
 import { FC, useState } from "react";
 import EditDialog from "./components/edit-dialog";
@@ -184,6 +185,9 @@ const Categories: FC = () => {
   ];
   return (
     <div className="p-4">
+      <Helmet>
+        <title>分类管理</title>
+      </Helmet>
       <DataTable
         // search={false}
         pagination={true}

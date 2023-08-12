@@ -1,5 +1,6 @@
 import { SettingsService } from "@/api";
 import { Button } from "@/components/ui/button";
+import { Helmet } from "react-helmet";
 import {
   Form,
   FormControl,
@@ -39,7 +40,7 @@ const Setting = () => {
   });
   const handleSave = async () => {
     const formData = form.getValues();
-    
+
     if (!data) {
       await SettingsService.settingsControllerCreate(formData);
     } else {
@@ -57,6 +58,9 @@ const Setting = () => {
   }, [data]);
   return (
     <div className="p-4 px-6">
+      <Helmet>
+        <title>设置</title>
+      </Helmet>
       <div className="flex flex-col gap-4 w-[600px]">
         <Form {...form}>
           <FormField
@@ -160,7 +164,6 @@ const Setting = () => {
           />
         </Form>
         <Button onClick={handleSave}>保存</Button>
-
       </div>
     </div>
   );

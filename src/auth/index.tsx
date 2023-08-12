@@ -6,7 +6,7 @@ import { useBoolean } from "ahooks";
 import { useToast } from "@/components/ui/use-toast";
 export interface AuthContextType {
   user: UserDTO | null;
-  signout: (callback: VoidFunction) => void;
+  signout: (callback?: VoidFunction) => void;
   setCurrentUser: (user: UserDTO) => void;
 }
 
@@ -14,9 +14,12 @@ const AuthContext = React.createContext<AuthContextType>(null!);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<UserDTO | null>(null);
+  const navigate = useNavigate();
 
   const signout = useCallback((callback: VoidFunction) => {
     setUser(null);
+    localStorage.removeItem("accessToken");
+    navigate("/login");
     callback();
   }, []);
   const setCurrentUser = useCallback((user: UserDTO) => {

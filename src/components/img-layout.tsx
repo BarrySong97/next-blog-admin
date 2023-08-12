@@ -18,22 +18,22 @@ const ImageLayout: FC<TestProps> = () => {
     structuralSharing: false,
     queryFn: PhotosService.photosControllerFindRecent,
   });
-   useQuery({
+  useQuery({
     queryKey: ["settings"],
     retry: false,
     refetchOnWindowFocus: false,
     structuralSharing: false,
     onSuccess(data) {
-        console.log(data);
-        
+
       setLayout(JSON.parse(data?.photoLayout ?? "[]"));
     },
     queryFn: SettingsService.settingsControllerFind,
   });
   const handleLayoutChange = async (layout: Layout[]) => {
-    const response = await SettingsService.settingsControllerAddPhotoLayout(
-      layout
-    );
+    layout.forEach((item, i) => {
+      item.i = i.toString();
+    })
+    await SettingsService.settingsControllerAddPhotoLayout(layout);
     // setLayout(JSON.parse(response.photoLayout));
   };
   return (
@@ -45,9 +45,9 @@ const ImageLayout: FC<TestProps> = () => {
       rowHeight={90}
       width={792}
     >
-      {data?.map((item) => {
+      {data?.map((item, i) => {
         return (
-          <div key={item.id}>
+          <div key={i}>
             <img src={item.url} alt="" className="h-full w-full object-cover" />
           </div>
         );

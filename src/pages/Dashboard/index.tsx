@@ -1,14 +1,13 @@
 import { FC } from "react";
 import "./index.css";
+import { Helmet } from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  MaterialSymbolsAccountBox,
   MaterialSymbolsArticle,
   MaterialSymbolsCommentRounded,
   MaterialSymbolsImagesmodeOutline,
 } from "./icons";
-import { DataTable } from "@/components/ui/data-table";
 import PostTable from "../Posts/components/post-table";
 import { useRequest } from "ahooks";
 import { AppService } from "@/api";
@@ -22,7 +21,6 @@ export type Payment = {
 };
 
 const Dashboard: FC<HomeProps> = () => {
-  const { t } = useTranslation();
   const statusList = [
     {
       title: "文章数",
@@ -50,6 +48,9 @@ const Dashboard: FC<HomeProps> = () => {
   const { data } = useRequest(() => AppService.appControllerGetDashboardData());
   return (
     <div className="p-4 home flex flex-col">
+      <Helmet>
+        <title>首页</title>
+      </Helmet>
       <div className="flex gap-4">
         {statusList.map((item) => {
           const nums = data?.[item.key as Keys] ?? 0;
@@ -73,9 +74,9 @@ const Dashboard: FC<HomeProps> = () => {
         style={{
           minHeight: "calc(100vh - 220px)",
         }}
-        className="flex gap-4 mt-4 overflow-auto "
+        className="flex flex-col gap-4 mt-4 overflow-auto "
       >
-        <Card className="flex-1">
+        <Card>
           <CardHeader>
             <CardTitle>最近文章</CardTitle>
           </CardHeader>
@@ -83,7 +84,7 @@ const Dashboard: FC<HomeProps> = () => {
             <PostTable />
           </CardContent>
         </Card>
-        <Card className="flex-1">
+        <Card className="w-1/2">
           <CardHeader>
             <CardTitle>首页照片</CardTitle>
           </CardHeader>

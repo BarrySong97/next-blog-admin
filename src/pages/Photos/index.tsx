@@ -1,5 +1,6 @@
 import { PhotoDTO, PhotosService } from "@/api";
 import { Button } from "@/components/ui/button";
+import { Helmet } from "react-helmet";
 import { DataTable } from "@/components/ui/data-table";
 import {
   DropdownMenu,
@@ -179,6 +180,10 @@ export default function Photos() {
   ];
   return (
     <div className="p-4">
+      <Helmet>
+        <title>图片管理</title>
+      </Helmet>
+
       <div className="flex justify-between items-center">
         <div className="space-x-2">
           <Button

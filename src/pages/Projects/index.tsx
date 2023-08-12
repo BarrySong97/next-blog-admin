@@ -1,5 +1,6 @@
 import { PhotoDTO, PhotosService, ProjectDTO, ProjectsService } from "@/api";
 import { Button } from "@/components/ui/button";
+import { Helmet } from "react-helmet";
 import { DataTable } from "@/components/ui/data-table";
 import {
   DropdownMenu,
@@ -203,6 +204,9 @@ export default function Projects() {
   ];
   return (
     <div className="p-4">
+      <Helmet>
+        <title>项目管理</title>
+      </Helmet>
       <DataTable
         // search={false}
         pagination={true}

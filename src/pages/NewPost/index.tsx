@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import "./markdownstyle.css";
+import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MDEditor from "@uiw/react-md-editor";
@@ -92,31 +93,46 @@ const NewPost: FC = () => {
     mdToc.use(toc, {
       anchorLinkSpace: false,
     });
-    let tocTokens = "";
-    mdToc.render(markdown, {
-      tocCallback: function (_, tocArray) {
-        tocArray?.forEach((element) => {
-          element.anchor = element.content
-            .toLowerCase()
-            .replace(/\*/g, "")
-            .replace(/\s/g, "-");
-          element.content = element.content.replace(/\*/g, "");
-        });
-        tocTokens = JSON.stringify(tocArray);
-      },
-    });
-    mdParser.renderer.rules.heading_open = function (tokens, idx) {
-      const headingText = tokens[idx + 1].content;
+    const tocTokens = [];
 
-      const id = headingText
-        .toLowerCase()
-        .replace(/\*/g, "")
-        .replace(/\s/g, "-");
+    mdParser.renderer.rules.heading_open = function (tokens, idx) {
+      const headingText = tokens[idx + 1].level;
+      const id = `heading-${headingText}-${idx + 1}`;
+
+      tocTokens.push({
+        anchor: id,
+        content: tokens[idx + 1].content,
+        level: headingText,
+      });
+
       return `<${tokens[idx].tag} id="${id}">`;
     };
+
+    mdParser.renderer.rules.link_open = function (tokens, idx) {
+      // 自定义返回开始标签
+      return `<a href="${tokens[idx].attrs[0][1]}" target="_blank">`;
+    };
+
+    mdParser.renderer.rules.link_close = function (...args) {
+      // 自定义返回结束标签
+      return "</a>";
+    };
+
     const html = mdParser.render(markdown);
 
-    return [html, tocTokens];
+    mdToc.render(markdown, {
+      tocCallback: function (_, tocArray) {
+        tocArray?.forEach((element, i) => {
+          console.log(element);
+          console.log(tocTokens[i]);
+
+          tocTokens[i].content = element.content.replace(/\*/g, "");
+          tocTokens[i].level = element.level;
+        });
+        // tocTokens = JSON.stringify(tocArray);
+      },
+    });
+    return [html, JSON.stringify(tocTokens)];
   };
   const createPost = async () => {
     if (!user) {
@@ -228,6 +244,9 @@ const NewPost: FC = () => {
         height: "calc(100vh - 114px)",
       }}
     >
+      <Helmet>
+        <title>新建文章</title>
+      </Helmet>
       <Form {...form}>
         <div className="flex mb-4 gap-4 items-center">
           <FormField
