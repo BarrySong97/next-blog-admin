@@ -84,7 +84,7 @@ const PostTable: FC<PostTableProps> = ({
         const dev = process.env.NODE_ENV === "development";
         const link = dev
           ? `http://localhost:5173/posts/${props.row.original.id}?`
-          : `http://admin.barrysong4real.cc/${props.row.original.id}?`;
+          : `http://admin.barrysong4real.cc/posts/${props.row.original.id}?`;
         return (
           <a className="font-medium  underline" target="_black" href={link}>
             {props.row.original.title}
@@ -99,7 +99,7 @@ const PostTable: FC<PostTableProps> = ({
         const dev = process.env.NODE_ENV === "development";
         const link = dev
           ? `http://localhost:3001/posts/${props.row.original.id}`
-          : `http://barrysong4real.cc/${props.row.original.id}`;
+          : `http://barrysong4real.cc/posts/${props.row.original.id}`;
         return (
           <a className="font-medium  underline" target="_black" href={link}>
             {link}
