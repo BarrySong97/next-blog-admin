@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useRef, useState } from "react";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import GridLayout, { Layout } from "react-grid-layout";
@@ -10,7 +10,8 @@ export interface TestProps {}
 // fake data generator
 
 const ImageLayout: FC<TestProps> = () => {
-  const [layout, setLayout] = useState<Layout[]>("");
+  const [layout, setLayout] = useState<Layout[]>();
+  const requestNum = useRef<number>(0);
   const { data } = useQuery({
     queryKey: ["photos"],
     retry: false,
@@ -24,26 +25,30 @@ const ImageLayout: FC<TestProps> = () => {
     refetchOnWindowFocus: false,
     structuralSharing: false,
     onSuccess(data) {
-
       setLayout(JSON.parse(data?.photoLayout ?? "[]"));
     },
     queryFn: SettingsService.settingsControllerFind,
   });
   const handleLayoutChange = async (layout: Layout[]) => {
+    // console.log(layout);
+
     layout.forEach((item, i) => {
       item.i = i.toString();
-    })
-    await SettingsService.settingsControllerAddPhotoLayout(layout);
-    // setLayout(JSON.parse(response.photoLayout));
+    });
+    if (requestNum.current !== 0) {
+      await SettingsService.settingsControllerAddPhotoLayout(layout);
+    } else {
+      requestNum.current++;
+    }
   };
   return (
     <GridLayout
-      className="layout"
+      className="layout ml-[-10px] "
       layout={layout}
       cols={9}
       onLayoutChange={(layout) => handleLayoutChange(layout)}
       rowHeight={90}
-      width={792}
+      width={1102}
     >
       {data?.map((item, i) => {
         return (

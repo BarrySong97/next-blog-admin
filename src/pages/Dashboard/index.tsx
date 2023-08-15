@@ -84,7 +84,7 @@ const Dashboard: FC<HomeProps> = () => {
             <PostTable />
           </CardContent>
         </Card>
-        <Card className="w-1/2">
+        <Card className="max-w-6xl">
           <CardHeader>
             <CardTitle>首页照片</CardTitle>
           </CardHeader>
